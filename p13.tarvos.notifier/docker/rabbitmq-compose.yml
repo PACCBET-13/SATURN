@@ -1,0 +1,26 @@
+version: '3.9'
+
+name: tarvos-broker
+
+services:
+  rabbitmq:
+    container_name: tarvos-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_NAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    image: rabbitmq:3.11-management-alpine
+    networks:
+      - tarvos-rabbitmq
+    ports:
+      - ${RABBITMQ_PORT}:${RABBITMQ_PORT_INTERNAL}
+    volumes:
+      - data:/var/lib/rabbitmq
+
+networks:
+  tarvos-rabbitmq:
+    name: tarvos-rabbitmq
+    driver: bridge
+
+volumes:
+  data:

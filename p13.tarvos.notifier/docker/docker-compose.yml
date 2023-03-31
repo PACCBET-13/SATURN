@@ -1,0 +1,29 @@
+version: '3.9'
+
+x-app-port: &app-port ${APP_PORT:-8000}
+x-app-port-internal: &app-port-internal ${APP_PORT_INTERNAL:-8000}
+
+name: tarvos-notifier
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: tarvos-notifier
+    command: ['make', 'run']
+    env_file:
+      - ../${ENV_FILE}
+    networks:
+      - tarvos_rabbitmq
+    ports:
+      - target: *app-port-internal
+        published: *app-port
+        host_ip: 0.0.0.0
+        protocol: tcp
+        mode: host
+
+networks:
+  tarvos_rabbitmq:
+    name: tarvos-rabbitmq
+    external: true
